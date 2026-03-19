@@ -7,14 +7,12 @@ set -euo pipefail
 source "$(dirname "$0")/helpers.sh"
 
 echo "==> Creating email notification channel for: $ALERT_EMAIL"
-
 CHANNEL_ID=$(gcloud beta monitoring channels create \
   --display-name="Infra Alerts Email" \
   --type=email \
   --channel-labels="email_address=${ALERT_EMAIL}" \
   --project="$PROJECT_ID" \
   --format="value(name)" 2>/dev/null | awk -F/ '{print $NF}')
-
 echo "   Notification channel ID: $CHANNEL_ID"
 CHANNEL_FULL="projects/${PROJECT_ID}/notificationChannels/${CHANNEL_ID}"
 
@@ -46,10 +44,10 @@ cat > /tmp/alert_cpu.json <<EOF
   "combiner": "OR",
   "enabled": true,
   "notificationChannels": ["${CHANNEL_FULL}"],
-"documentation": {
-  "mimeType": "text/markdown",
-  "content": "Disk utilization exceeded 90%. Immediate action required: check logs, archive old files to GCS bucket."
-}
+  "documentation": {
+    "mimeType": "text/markdown",
+    "content": "CPU utilization exceeded 80% for 5 minutes. Check for runaway processes: top, ps aux, or Cloud Logging."
+  }
 }
 EOF
 gcloud alpha monitoring policies create \
@@ -81,9 +79,9 @@ cat > /tmp/alert_disk.json <<EOF
   "combiner": "OR",
   "enabled": true,
   "notificationChannels": ["${CHANNEL_FULL}"],
-   "documentation": {
-    "content": "CPU utilization exceeded 80% for 5 minutes. Check for runaway processes: top, ps aux, or Cloud Logging.",
-    "mimeType": "text/markdown"
+  "documentation": {
+    "mimeType": "text/markdown",
+    "content": "Disk utilization exceeded 90%. Immediate action required: check logs, archive old files to GCS bucket."
   }
 }
 EOF
@@ -95,7 +93,6 @@ gcloud alpha monitoring policies create \
 PROXY_IP=$(gcloud compute instances describe "$PROXY_VM" \
   --zone="$ZONE" --project="$PROJECT_ID" \
   --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
-
 echo "==> Creating HTTP uptime check for http://${PROXY_IP}/healthz..."
 gcloud monitoring uptime create "nginx-proxy-healthcheck" \
   --resource-type=uptime-url \
