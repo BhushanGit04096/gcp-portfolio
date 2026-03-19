@@ -80,8 +80,9 @@ cat > /tmp/alert_disk.json <<EOF
   "combiner": "OR",
   "enabled": true,
   "notificationChannels": ["${CHANNEL_FULL}"],
-  "documentation": {
-    "content": "Disk utilization exceeded 90%. Immediate action required: check logs, archive old files to GCS bucket."
+   "documentation": {
+    "content": "CPU utilization exceeded 80% for 5 minutes. Check for runaway processes: top, ps aux, or Cloud Logging.",
+    "mimeType": "text/markdown"
   }
 }
 EOF
