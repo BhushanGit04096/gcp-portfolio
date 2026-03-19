@@ -46,9 +46,10 @@ cat > /tmp/alert_cpu.json <<EOF
   "combiner": "OR",
   "enabled": true,
   "notificationChannels": ["${CHANNEL_FULL}"],
-  "documentation": {
-    "content": "CPU utilization exceeded 80% for 5 minutes. Check for runaway processes: top, ps aux, or Cloud Logging."
-  }
+"documentation": {
+  "mimeType": "text/markdown",
+  "content": "Disk utilization exceeded 90%. Immediate action required: check logs, archive old files to GCS bucket."
+}
 }
 EOF
 gcloud alpha monitoring policies create \
