@@ -4,10 +4,10 @@
 # EDIT THESE VALUES before running any script
 # ============================================================
 
-export PROJECT_ID="your-gcp-project-id"        # e.g. my-infra-project-123
+export PROJECT_ID="playground-s-11-96307afe"       # e.g. my-infra-project-123
 export REGION="us-central1"
 export ZONE="us-central1-a"
-export ALERT_EMAIL="your-email@example.com"     # For Cloud Monitoring alerts
+export ALERT_EMAIL="Nagabhushancherry@gmail.com"     # For Cloud Monitoring alerts
 
 # Network
 export VPC_NAME="infra-vpc"
