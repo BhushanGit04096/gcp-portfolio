@@ -1,3 +1,4 @@
+# Flask Metrics App - v2
 from flask import Flask, jsonify
 import psutil
 
@@ -5,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Flask Metrics App is running!"
+    return "Flask Metrics App is running!version 2"
 
 @app.route('/metrics')
 def metrics():
