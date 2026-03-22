@@ -18,7 +18,7 @@ resource "google_compute_subnetwork" "subnet" {
   
 }
 
-resource "google_compute_firewall" "name" {
+resource "google_compute_firewall" "Firewall" {
     name = "flask-metrics-allow-web"
     network = google_compute_network.vpc.id
 
@@ -28,5 +28,33 @@ resource "google_compute_firewall" "name" {
     }
 
     source_ranges = "0.0.0.0/0"
+  
+}
+
+resource "google_container_cluster" "GKEcluster" {
+    name = "flask-metrics-cluster"
+    location = var.zone
+
+    network = google_compute_network.vpc.id
+    subnetwork = google_compute_subnetwork.subnet.id
+
+    remove_default_node_pool = true
+    initial_node_count = 1
+
+    deletion_protection = false
+  
+}
+
+resource "google_container_node_pool" "name" {
+    name = "flask-metrics-node-pool"
+    location = var.zone
+    cluster = google_container_cluster.GKEcluster.id
+
+    node_count = 2
+
+    node_config {
+      machine_type = "e2-medium"
+      oauth_scopes = [ "https://www.googleapis.com/auth/cloud-platform" ]
+    }
   
 }
