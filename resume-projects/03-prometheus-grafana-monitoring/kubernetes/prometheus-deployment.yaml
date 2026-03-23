@@ -12,12 +12,15 @@ spec:
       labels:
         app: prometheus
     spec:
-      containers:        # 6 spaces
-      - name: prometheus
-        volumeMounts:
+  containers:
+    - name: prometheus
+      image: prom/prometheus:latest
+      ports:
+        - containerPort: 9090
+      volumeMounts:
         - name: prom-volume
           mountPath: /etc/prometheus
-      volumes:           # 6 spaces — same as containers
-      - name: prom-volume
-        configMap:
-          name: prometheus-config
+  volumes:
+    - name: prom-volume
+      configMap:
+        name: prometheus-config
