@@ -1,21 +1,21 @@
-# Flask Metrics App - v2
-from flask import Flask, jsonify
+from flask import Flask
+from prometheus_client import Gauge, generate_latest, CONTENT_TYPE_LATEST
 import psutil
 
 app = Flask(__name__)
 
+cpu_gauge = Gauge('cpu_percent', 'CPU usage percent')
+memory_gauge = Gauge('memory_percent', 'Memory usage percent')
+
 @app.route('/')
 def home():
-    return "Flask Metrics App is running!version 2"
+    return "Flask Metrics App is running!"
 
 @app.route('/metrics')
 def metrics():
-    return jsonify({
-        "cpu_percent": psutil.cpu_percent(interval=1),
-        "memory_percent": psutil.virtual_memory().percent,
-        "memory_used_mb": round(psutil.virtual_memory().used / 1024 / 1024, 2),
-        "memory_total_mb": round(psutil.virtual_memory().total / 1024 / 1024, 2)
-    })
+    cpu_gauge.set(psutil.cpu_percent(interval=1))
+    memory_gauge.set(psutil.virtual_memory().percent)
+    return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
