@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
-spec:
+spec:                          # Deployment spec
   replicas: 1
   selector:
     matchLabels:
@@ -11,16 +11,16 @@ spec:
     metadata:
       labels:
         app: prometheus
-    spec:
-  containers:
-    - name: prometheus
-      image: prom/prometheus:latest
-      ports:
+    spec:                      # Pod spec (different from Deployment spec)
+      containers:              # belongs to pod spec
+      - name: prometheus
+        image: prom/prometheus:latest
+        ports:
         - containerPort: 9090
-      volumeMounts:
+        volumeMounts:
         - name: prom-volume
           mountPath: /etc/prometheus
-  volumes:
-    - name: prom-volume
-      configMap:
-        name: prometheus-config
+      volumes:                 # belongs to pod spec
+      - name: prom-volume
+        configMap:
+          name: prometheus-config
